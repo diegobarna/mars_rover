@@ -6,6 +6,7 @@ var myRover = {
 };
 
 // The grid is rotated 90º clockwise, north is left
+// Obstacles are represented by 1
 
 var grid = [
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // From [0,0] to [0,9]
@@ -21,8 +22,7 @@ var grid = [
 ];
 
 function showPosition(rover) {
-  console.log("New Rover Position: [" + rover.position[0] + ", " + rover.position[1] + "]")
-  console.log("Direction: " + rover.direction);
+  console.log("Rover Position: [" + rover.position[0] + "," + rover.position[1] + "] - Direction: " + rover.direction);
 }
 
 function checkBorder(position) {
@@ -74,16 +74,16 @@ function goBack(rover) {
 function turnRight(rover) {
   switch(rover.direction) {
     case 'N':
-      rover.direction = 'E'
+      rover.direction = 'E';
       break;
     case 'E':
-      rover.direction = 'S'
+      rover.direction = 'S';
       break;
     case 'S':
-      rover.direction = 'W'
+      rover.direction = 'W';
       break;
     case 'W':
-      rover.direction = 'N'
+      rover.direction = 'N';
       break;
   };
   showPosition(rover);
@@ -92,20 +92,43 @@ function turnRight(rover) {
 function turnLeft(rover) {
   switch(rover.direction) {
     case 'N':
-      rover.direction = 'W'
+      rover.direction = 'W';
       break;
     case 'E':
-      rover.direction = 'N'
+      rover.direction = 'N';
       break;
     case 'S':
-      rover.direction = 'E'
+      rover.direction = 'E';
       break;
     case 'W':
-      rover.direction = 'S'
+      rover.direction = 'S';
       break;
   };
   showPosition(rover);
 } 
 
+function moveSequence(sequence, rover) {
+  sequence = typeof sequence != "array" ? sequence.split("") : sequence;
 
-goForward(myRover);
+  for (var i = 0; i < sequence.length; i++) {
+    switch(sequence[i]) {
+      case 'f':
+        goForward(rover);
+        break;
+      case 'b':
+        goBack(rover);
+        break;
+      case 'r':
+        turnRight(rover);
+        break;
+      case 'l':
+        turnLeft(rover);
+        break;
+    };
+  }
+  showPosition(rover);
+}
+
+debugger;
+moveSequence("ffflflfrblbbblbrffffff", myRover);
+
