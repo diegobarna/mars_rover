@@ -1,17 +1,17 @@
 // It starts in southwest corner [0,0] facing east.
 
 var myRover = {
-  position: [0,0], 
+  position: [0, 0], 
   direction: 'E'
 };
 
 // The grid is rotated 90º clockwise, north is left
 // Obstacles are represented by 1
 
-var grid = [
+var myGrid = [
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // From [0,0] to [0,9]
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // From [1,0] to [1,9]
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // From [2,0] to [2,9]
+  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0], // From [2,0] to [2,9]
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // From [3,0] to [3,9]
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // From [4,0] to [4,9]
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // From [5,0] to [5,9]
@@ -25,7 +25,7 @@ function showPosition(rover) {
   console.log("Rover Position: [" + rover.position[0] + "," + rover.position[1] + "] - Direction: " + rover.direction);
 }
 
-function checkBorder(position) {
+function checkMove(position) {
   if (position < 0) {
     return 9;
   } else if (position > 9) {
@@ -35,37 +35,48 @@ function checkBorder(position) {
   }
 }
 
-function goForward(rover) {
+function goForward(rover, grid) {
+  var move;
   switch(rover.direction) {
     case 'N':
-      rover.position[1] = checkBorder(++rover.position[1]);
+      if (grid[rover.position[0]][++rover.position[1]] != 0) {
+        console.log("Obstacle founded at point: [" + rover.position[0] + "," + rover.position[1] + "]");
+        return 'Stop Sequence';
+      } else {
+        rover.position[1] = checkMove(rover.position[1]);
+      }
       break;
     case 'E':
-      rover.position[0] = checkBorder(++rover.position[0]);
+    if (grid[++rover.position[0]][rover.position[1]] != 0) {
+        console.log("Obstacle founded at point: [" + rover.position[0] + "," + rover.position[1] + "]");
+        return 'Stop Sequence';
+      } else {
+        rover.position[0] = checkMove(rover.position[0]);
+      }
       break;
     case 'S':
-      rover.position[1] = checkBorder(--rover.position[1]);
+      rover.position[1] = checkMove(--rover.position[1]);
       break;
     case 'W':
-      rover.position[0] = checkBorder(--rover.position[0]);
+      rover.position[0] = checkMove(--rover.position[0]);
       break;
   };
   showPosition(rover);
 }
 
-function goBack(rover) {
+function goBack(rover, grid) {
   switch(rover.direction) {
     case 'N':
-      rover.position[1] = checkBorder(--rover.position[1]);
+      rover.position[1] = checkMove(--rover.position[1]);
       break;
     case 'E':
-      rover.position[0] = checkBorder(--rover.position[0]);
+      rover.position[0] = checkMove(--rover.position[0]);
       break;
     case 'S':
-      rover.position[1] = checkBorder(++rover.position[1]);
+      rover.position[1] = checkMove(++rover.position[1]);
       break;
     case 'W':
-      rover.position[0] = checkBorder(++rover.position[0]);
+      rover.position[0] = checkMove(++rover.position[0]);
       break;
   };
   showPosition(rover);
@@ -107,16 +118,19 @@ function turnLeft(rover) {
   showPosition(rover);
 } 
 
-function moveSequence(sequence, rover) {
+function moveSequence(sequence, rover, grid) {
   sequence = typeof sequence != "array" ? sequence.split("") : sequence;
-
   for (var i = 0; i < sequence.length; i++) {
+    var checkObstacle;
     switch(sequence[i]) {
       case 'f':
-        goForward(rover);
+        checkObstacle = goForward(rover, grid)
+        if (checkObstacle === "Stop Sequence") {
+          return;
+        }
         break;
       case 'b':
-        goBack(rover);
+        goBack(rover, grid);
         break;
       case 'r':
         turnRight(rover);
@@ -130,5 +144,5 @@ function moveSequence(sequence, rover) {
 }
 
 debugger;
-moveSequence("ffflflfrblbbblbrffffff", myRover);
+moveSequence("ffflflfrblbbblflfffff", myRover, myGrid);
 
