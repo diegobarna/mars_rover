@@ -11,10 +11,10 @@ var myRover = {
 var myGrid = [
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // From [0,0] to [0,9]
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // From [1,0] to [1,9]
-  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0], // From [2,0] to [2,9]
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // From [2,0] to [2,9]
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // From [3,0] to [3,9]
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // From [4,0] to [4,9]
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // From [5,0] to [5,9]
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], // From [5,0] to [5,9]
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // From [6,0] to [6,9]
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // From [7,0] to [7,9]
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // From [8,0] to [8,9]
@@ -25,7 +25,7 @@ function showPosition(rover) {
   console.log("Rover Position: [" + rover.position[0] + "," + rover.position[1] + "] - Direction: " + rover.direction);
 }
 
-function checkMove(position) {
+function checkBorder(position) {
   if (position < 0) {
     return 9;
   } else if (position > 9) {
@@ -35,30 +35,42 @@ function checkMove(position) {
   }
 }
 
+function checkObstacle(grid,x,y) {
+  var obstacle = grid[x][y];
+  if (obstacle === 1) {
+    console.log("Found obstacle at point: [" + x + "," + y + "]");
+    return true
+  } else {
+    return false;
+  }
+}
+
 function goForward(rover, grid) {
   var move;
   switch(rover.direction) {
     case 'N':
-      if (grid[rover.position[0]][++rover.position[1]] != 0) {
-        console.log("Obstacle founded at point: [" + rover.position[0] + "," + rover.position[1] + "]");
-        return 'Stop Sequence';
-      } else {
-        rover.position[1] = checkMove(rover.position[1]);
+      move = checkBorder(++rover.position[1]);
+      if (checkObstacle(grid,[rover.position[0]],[move])) {
+        return 'Stop';
       }
       break;
     case 'E':
-    if (grid[++rover.position[0]][rover.position[1]] != 0) {
-        console.log("Obstacle founded at point: [" + rover.position[0] + "," + rover.position[1] + "]");
-        return 'Stop Sequence';
-      } else {
-        rover.position[0] = checkMove(rover.position[0]);
+      move = checkBorder(++rover.position[0]);
+      if (checkObstacle(grid,[move],[rover.position[1]])) {
+        return 'Stop';
       }
       break;
     case 'S':
-      rover.position[1] = checkMove(--rover.position[1]);
+      move = checkBorder(--rover.position[1]);
+      if (checkObstacle(grid,[rover.position[0]],[move])) {
+        return 'Stop';
+      }
       break;
     case 'W':
-      rover.position[0] = checkMove(--rover.position[0]);
+      move = checkBorder(--rover.position[0]);
+      if (checkObstacle(grid,[move],[rover.position[1]])) {
+        return 'Stop';
+      }
       break;
   };
   showPosition(rover);
@@ -67,16 +79,28 @@ function goForward(rover, grid) {
 function goBack(rover, grid) {
   switch(rover.direction) {
     case 'N':
-      rover.position[1] = checkMove(--rover.position[1]);
+      move = checkBorder(--rover.position[1]);
+      if (checkObstacle(grid,[rover.position[0]],[move])) {
+        return 'Stop';
+      }
       break;
     case 'E':
-      rover.position[0] = checkMove(--rover.position[0]);
+      move = checkBorder(--rover.position[0]);
+      if (checkObstacle(grid,[move],[rover.position[1]])) {
+        return 'Stop';
+      }
       break;
     case 'S':
-      rover.position[1] = checkMove(++rover.position[1]);
+      move = checkBorder(++rover.position[1]);
+      if (checkObstacle(grid,[rover.position[0]],[move])) {
+        return 'Stop';
+      }
       break;
     case 'W':
-      rover.position[0] = checkMove(++rover.position[0]);
+      move = checkBorder(++rover.position[0]);
+      if (checkObstacle(grid,[move],[rover.position[1]])) {
+        return 'Stop';
+      }
       break;
   };
   showPosition(rover);
@@ -121,16 +145,19 @@ function turnLeft(rover) {
 function moveSequence(sequence, rover, grid) {
   sequence = typeof sequence != "array" ? sequence.split("") : sequence;
   for (var i = 0; i < sequence.length; i++) {
-    var checkObstacle;
+    var stop;
     switch(sequence[i]) {
       case 'f':
-        checkObstacle = goForward(rover, grid)
-        if (checkObstacle === "Stop Sequence") {
+        stop = goForward(rover, grid);
+        if (stop === "Stop") {
           return;
         }
         break;
       case 'b':
-        goBack(rover, grid);
+        stop = goBack(rover, grid);
+        if (stop === "Stop") {
+          return;
+        } 
         break;
       case 'r':
         turnRight(rover);
