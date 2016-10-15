@@ -64,7 +64,7 @@ function goForward(rover, grid) {
       roverMove = checkBorder(rover.position[1] + 1);
       if (checkObstacle(grid,[rover.position[0]],[roverMove])) {
         grid[rover.position[0]][rover.position[1]] = rover.id;
-        console.log(rover.name + " stopped.")
+        console.log(rover.name + " stopped")
         rover.sequence = [];
       } else {
         rover.position[1] = roverMove;
@@ -75,7 +75,7 @@ function goForward(rover, grid) {
       roverMove = checkBorder(rover.position[0] + 1);
       if (checkObstacle(grid,[roverMove],[rover.position[1]])) {
         grid[rover.position[0]][rover.position[1]] = rover.id;
-        console.log(rover.name + " stopped.")
+        console.log(rover.name + " stopped")
         rover.sequence = [];
       } else {
         rover.position[0] = roverMove;
@@ -86,7 +86,7 @@ function goForward(rover, grid) {
       roverMove = checkBorder(rover.position[1] - 1);
       if (checkObstacle(grid,[rover.position[0]],[roverMove])) {
         grid[rover.position[0]][rover.position[1]] = rover.id;
-        console.log(rover.name + " stopped.")
+        console.log(rover.name + " stopped")
         rover.sequence = [];
       } else {
         rover.position[1] = roverMove;
@@ -97,7 +97,7 @@ function goForward(rover, grid) {
       roverMove = checkBorder(rover.position[0] - 1);
       if (checkObstacle(grid,[roverMove],[rover.position[1]])) {
         grid[rover.position[0]][rover.position[1]] = rover.id;
-        console.log(rover.name + " stopped.")
+        console.log(rover.name + " stopped")
         rover.sequence = [];
       } else {
         rover.position[0] = roverMove;
@@ -115,7 +115,7 @@ function goBack(rover, grid) {
       roverMove = checkBorder(rover.position[1] - 1);
       if (checkObstacle(grid,[rover.position[0]],[roverMove])) {
         grid[rover.position[0]][rover.position[1]] = rover.id;
-        console.log(rover.name + " stopped.")
+        console.log(rover.name + " stopped")
         rover.sequence = [];
       } else {
         rover.position[1] = roverMove;
@@ -126,7 +126,7 @@ function goBack(rover, grid) {
       roverMove = checkBorder(rover.position[0] - 1);
       if (checkObstacle(grid,[roverMove],[rover.position[1]])) {
         grid[rover.position[0]][rover.position[1]] = rover.id;
-        console.log(rover.name + " stopped.")
+        console.log(rover.name + " stopped")
         rover.sequence = [];
       } else {
         rover.position[0] = roverMove;
@@ -137,7 +137,7 @@ function goBack(rover, grid) {
       roverMove = checkBorder(rover.position[1] + 1);
       if (checkObstacle(grid,[rover.position[0]],[roverMove])) {
         grid[rover.position[0]][rover.position[1]] = rover.id;
-        console.log(rover.name + " stopped.")
+        console.log(rover.name + " stopped")
         rover.sequence = [];
       } else {
         rover.position[1] = roverMove;
@@ -148,7 +148,7 @@ function goBack(rover, grid) {
       roverMove = checkBorder(rover.position[0] + 1);
       if (checkObstacle(grid,[roverMove],[rover.position[1]])) {
         grid[rover.position[0]][rover.position[1]] = rover.id;
-        console.log(rover.name + " stopped.")
+        console.log(rover.name + " stopped")
         rover.sequence = [];
       } else {
         rover.position[0] = roverMove;
